@@ -1,12 +1,24 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Categories from './components/Categories'
 import ProductGrid from './components/ProductGrid'
+import InfoSections from './components/InfoSections'
 
 function App() {
   const [query, setQuery] = useState('')
   const [cat, setCat] = useState('')
+
+  // Auto-seed example products on first load (non-blocking)
+  useEffect(() => {
+    const seed = async () => {
+      try {
+        const base = import.meta.env.VITE_BACKEND_URL || 'http://localhost:8000'
+        await fetch(`${base}/api/seed`, { method: 'POST' })
+      } catch (_) {}
+    }
+    seed()
+  }, [])
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-white text-slate-800">
@@ -16,6 +28,7 @@ function App() {
         <Categories active={cat} setActive={setCat} />
       </div>
       <ProductGrid query={query} category={cat} />
+      <InfoSections />
       <footer id="contact" className="mt-16 border-t border-slate-200">
         <div className="max-w-6xl mx-auto px-4 py-10 grid md:grid-cols-3 gap-6 text-sm text-slate-600">
           <div>

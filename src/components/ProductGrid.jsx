@@ -36,6 +36,10 @@ export default function ProductGrid({ query, category }) {
     load()
   }, [query, category])
 
+  const handleQuickAdd = (p) => {
+    alert(`Added to cart: ${p.title}`)
+  }
+
   return (
     <section id="catalog" className="max-w-6xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-4">
@@ -51,16 +55,18 @@ export default function ProductGrid({ query, category }) {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
           {items.map(p => (
-            <article key={p.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition">
+            <article key={p.id} className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition group">
               <div className="aspect-[4/3] bg-slate-100">
-                {p.image_url && <img src={p.image_url} alt={p.title} className="w-full h-full object-cover" />}
+                {p.image_url && <img src={p.image_url} alt={p.title} className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform" />}
               </div>
               <div className="p-3">
+                <div className="text-xs uppercase tracking-wide text-slate-500">{p.brand || '—'}</div>
                 <h3 className="font-medium text-slate-800 line-clamp-2 min-h-[3rem]">{p.title}</h3>
                 <div className="mt-2 flex items-center justify-between">
-                  <div className="text-slate-900 font-semibold">${'{'}p.price.toFixed(2){'}'}</div>
+                  <div className="text-slate-900 font-semibold">${p.price?.toFixed ? p.price.toFixed(2) : Number(p.price).toFixed(2)}</div>
                   <span className={`text-xs px-2 py-1 rounded ${p.in_stock ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}`}>{p.in_stock ? 'In stock' : 'Backorder'}</span>
                 </div>
+                <button onClick={() => handleQuickAdd(p)} className="mt-3 w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white py-2 text-sm font-medium">Add to cart</button>
               </div>
             </article>
           ))}
